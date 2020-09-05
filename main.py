@@ -67,14 +67,14 @@ class CatchObject:
         self.y += self.vel
 
 
-#just another collision test
+# just another collision test
 def collide(obj1, obj2):
     if obj1.rect.colliderect(obj2.circle_rect):
         return True
     return False
 
 
-#display update and stuff
+# display update and stuff
 def redraw_window(window, player, objects, score, lives):
     window.fill((0, 0, 0))
     window.blit(bg, (0, 0))
@@ -95,7 +95,7 @@ def redraw_window(window, player, objects, score, lives):
     pygame.display.update()
 
 
-#the main loop!
+# the main loop!
 def main():
     score = 0
     lives = 6
@@ -103,6 +103,12 @@ def main():
     clock = pygame.time.Clock()
     pause = False
     objects = [CatchObject((232, 75, 95))]
+    scores = {5: 10,
+              6: 9,
+              7: 8,
+              8: 7,
+              9: 6,
+              10: 5}
     while True:
         clock.tick(60)
         redraw_window(win, player, objects, score, lives)
@@ -119,9 +125,9 @@ def main():
                         pause = True
                 if collide(player, Cobject):
                     if Cobject.color == (255, 215, 0):
-                        score += 25
+                        score += 150
                     else:
-                        score += Cobject.radius
+                        score += scores[Cobject.radius] * Cobject.vel
                     objects.pop(ind)
 
             if len(objects) == 0:
@@ -135,5 +141,25 @@ def main():
                 player.move('la_ml')
 
 
-#running it all together!
-main()
+#main menu and combining everything
+def main_menu():
+    run = True
+    title_font = pygame.font.SysFont('arial', 28)
+
+    while run:
+        win.fill((252, 209, 42))
+        intro = title_font.render('Press mouse button to start!', 1, (50, 50, 50))
+        win.blit(intro, (int(width / 2 - intro.get_width() / 2), 210))
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                main()
+    pygame.quit()
+
+
+#running the loop!
+main_menu()
